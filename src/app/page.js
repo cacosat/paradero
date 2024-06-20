@@ -1,3 +1,7 @@
+"use client"
+
+import React from "react";
+import {useState, useEffect} from 'react';
 import Image from "next/image"; 
 import {
   Card,
@@ -19,6 +23,14 @@ import { ModeToggle } from "@/components/ui/modeToggle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Home() {
+  const [otp, setOtp] = useState('');
+
+  const handleOtpChange = (newOtp) => {
+    if (newOtp.length <= 6 || newOtp.length < otp.length) {  // Allow changes that reduce the length
+      setOtp(newOtp);  // Set the new OTP directly
+    }
+  };
+
   return (
     <main className="flex flex-col h-screen min-w-[300px] max-w-[1440px] mx-auto pt-10">
         <div className="self-end justify-self-start mx-2 sm:mx-8">
@@ -41,10 +53,10 @@ export default function Home() {
                 <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
               </CardHeader>
               <CardContent className="self-center">
-                <InputOTP maxLength={6}>
+                <InputOTP maxLength={6} value={otp} onChange={handleOtpChange}>
                   <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={0}  />
+                    <InputOTPSlot index={1}  />
                   </InputOTPGroup>
                   <InputOTPSeparator />
                   <InputOTPGroup>
