@@ -21,52 +21,95 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 export default function Home() {
   return (
     <main className="flex flex-col justify-center items-center h-screen">
-      <ModeToggle />
       <Card>
+        <Tabs defaultValue="stop" className="w-[400px]">
 
-        <CardHeader>
-
-          <Tabs defaultValue="account" className="w-[400px]">
+          <div class="flex justify-between">
             <TabsList>
-              <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="password">Password</TabsTrigger>
+              <TabsTrigger value="stop">Paradero</TabsTrigger>
+              <TabsTrigger value="bus">Recorrido</TabsTrigger>
+              <TabsTrigger value="both">Ambos</TabsTrigger>
             </TabsList>
-            <TabsContent value="account">Make changes to your account here.</TabsContent>
-            <TabsContent value="password">Change your password here.</TabsContent>
-          </Tabs>
+            <ModeToggle />
+          </div>
 
-        </CardHeader>
+          <TabsContent value="stop">
+            
+            <CardHeader>
+              <CardTitle>Paradero</CardTitle>
+              <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
+            </CardHeader>
 
-        <CardContent>
+            <CardContent>
+              <InputOTP maxLength={6}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                    <InputOTPSlot index={2} />
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </CardContent>
 
-          <CardTitle>Paradero</CardTitle>
-          <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
+            <CardFooter>
+              <Button>Buscar</Button>
+            </CardFooter>
+          </TabsContent>
+          <TabsContent value="bus">
+            <CardHeader>
+              <CardTitle>Bus</CardTitle>
+              <CardDescription>Ingresa el recorrido / bus</CardDescription>
+            </CardHeader>
 
-          <InputOTP maxLength={6}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
+            <CardContent>
+              <Input />
+            </CardContent>
 
-          <CardTitle>Bus</CardTitle>
-          <CardDescription>Ingresa el recorrido / bus</CardDescription>
-          <Input />
+            <CardFooter>
+              <Button>Buscar</Button>
+            </CardFooter>
+          </TabsContent>
+          <TabsContent value="both">
+            <CardHeader>
+              <CardTitle>Paradero</CardTitle>
+              <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
+            </CardHeader>
 
-        </CardContent>
+            <CardContent>
+              <InputOTP maxLength={6}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </CardContent>
 
-        <CardFooter>
-          
-          <Button>Buscar</Button>
-          
-        </CardFooter>
+            <CardHeader>
+              <CardTitle>Bus</CardTitle>
+              <CardDescription>Ingresa el recorrido / bus</CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <Input />
+            </CardContent>
+
+            <CardFooter>
+              <Button>Buscar</Button>
+            </CardFooter>
+          </TabsContent>
+        </Tabs>
 
       </Card>
     </main>
