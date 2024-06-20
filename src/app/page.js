@@ -20,27 +20,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Home() {
   return (
-    <main className="flex flex-col h-screen max-w-[1440px] mx-auto pt-10">
-        <div className="self-end justify-self-start mx-8">
+    <main className="flex flex-col h-screen min-w-[300px] max-w-[1440px] mx-auto pt-10">
+        <div className="self-end justify-self-start mx-2 sm:mx-8">
           <ModeToggle />
         </div>
-      <div className="flex justify-center items-center h-full">
+      <div className="flex justify-center items-center h-full mx-2">
         <Card>
-          <Tabs defaultValue="stop" className="w-[400px]">
-            <div class="flex justify-between">
-              <TabsList>
+          <Tabs defaultValue="stop" className="flex flex-col max-w-[400px]">
+            <div className="self-center">
+              <TabsList className="">
                 <TabsTrigger value="stop">Paradero</TabsTrigger>
                 <TabsTrigger value="bus">Recorrido</TabsTrigger>
                 <TabsTrigger value="both">Ambos</TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value="stop">
+            <TabsContent value="stop" className="flex flex-col">
         
               <CardHeader>
                 <CardTitle>Paradero</CardTitle>
                 <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="self-center">
                 <InputOTP maxLength={6}>
                   <InputOTPGroup>
                     <InputOTPSlot index={0} />
@@ -55,28 +55,28 @@ export default function Home() {
                   </InputOTPGroup>
                 </InputOTP>
               </CardContent>
-              <CardFooter>
-                <Button>Buscar</Button>
+              <CardFooter className="flex justify-end">
+                <Button className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">Buscar</Button>
               </CardFooter>
             </TabsContent>
-            <TabsContent value="bus">
+            <TabsContent value="bus" className="flex flex-col">
               <CardHeader>
                 <CardTitle>Bus</CardTitle>
                 <CardDescription>Ingresa el recorrido / bus</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="self-center">
                 <Input />
               </CardContent>
-              <CardFooter>
-                <Button>Buscar</Button>
+              <CardFooter className="flex justify-end">
+                <Button className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">Buscar</Button>
               </CardFooter>
             </TabsContent>
-            <TabsContent value="both">
+            <TabsContent value="both" className="flex flex-col">
               <CardHeader>
                 <CardTitle>Paradero</CardTitle>
                 <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="self-center">
                 <InputOTP maxLength={6}>
                   <InputOTPGroup>
                     <InputOTPSlot index={0} />
@@ -95,11 +95,11 @@ export default function Home() {
                 <CardTitle>Bus</CardTitle>
                 <CardDescription>Ingresa el recorrido / bus</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="self-center">
                 <Input />
               </CardContent>
-              <CardFooter>
-                <Button>Buscar</Button>
+              <CardFooter className="flex justify-end">
+                <Button className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">Buscar</Button>
               </CardFooter>
             </TabsContent>
           </Tabs>
