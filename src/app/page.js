@@ -23,10 +23,12 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/modeToggle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Home() {
   const validationRegex = /^[0-9a-zA-Z]+$/;
   const [otp, setOtp] = useState('');
+  const { toast } = useToast();
 
   const handleOtpChange = (newOtp) => {
     if (newOtp.length <= 6 || newOtp.length < otp.length) {  // Allow changes that reduce the length
@@ -38,13 +40,19 @@ export default function Home() {
   const handleSubmit = (event, redirect) => {
     const value = otp; // dependent on state hook otp
     if (value.length >= 3) {
-      if (!isNaN(parseInt(value[0])) || !isNaN(parseInt(value[1]))) {
-        console.log("The first two characters must be letters");
+      if (!/^[a-zA-Z]{2}[0-9]+$/.test(value)) {
+        toast({
+          title: "Debe tener 2 letras y el resto números",
+          description: "Ingresa un valor del tipo 'pc1000, pa251, pa10, etc.'"
+        });
       } else {
         console.log("correct")
       }
     } else {
-      console.log("Ingresa un valor del tipo 'pc1000, pa251, pa10, etc.'")
+      toast({
+        title: "Debe tener al menos 3 caracteres (ej.: pa1)",
+        description: "Ingresa un valor del tipo 'pc1000, pa251, pa10, etc.'"
+      });
     }
   }
 
