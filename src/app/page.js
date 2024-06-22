@@ -4,6 +4,7 @@ import React from "react";
 import {useState, useEffect} from 'react';
 import Image from "next/image"; 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -29,6 +30,7 @@ export default function Home() {
   const validationRegex = /^[0-9a-zA-Z]+$/;
   const [otp, setOtp] = useState('');
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleOtpChange = (newOtp) => {
     if (newOtp.length <= 6 || newOtp.length < otp.length) {  // Allow changes that reduce the length
@@ -37,16 +39,24 @@ export default function Home() {
     }
   };
 
-  const handleSubmit = (event, redirect) => {
+  const handleSubmit = async (event, redirect) => {
     const value = otp; // dependent on state hook otp
     if (value.length >= 3) {
       if (!/^[a-zA-Z]{2}[0-9]+$/.test(value)) {
+        // input validation
         toast({
           title: "Debe tener 2 letras y el resto números",
           description: "Ingresa un valor del tipo 'pc1000, pa251, pa10, etc.'"
         });
       } else {
         console.log("correct")
+        const response = await fetch(`https://red-api.chewy.workers.dev/stops/${value}/next_arrivals`);
+        if (response.ok) {
+          const response_data = await response.json();
+          const serialized_response = encodeURIComponent(JSON.stringify(response_data))
+          const serialized_stop = encodeURIComponent(JSON.stringify(otp));
+          router.push(`/result?stop=${serialized_stop}&data=${serialized_response}`)
+        }
       }
     } else {
       toast({
