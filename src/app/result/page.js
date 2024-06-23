@@ -3,6 +3,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import {
     Card,
     CardContent,
@@ -17,18 +18,18 @@ import {
     TableCell,
     TableRow,
   } from "@/components/ui/table"  
-import { Badge } from "@/components/ui/badge";  
+import BadgeCustom from "@/components/ui/badge-custom";  
 import { Progress } from "@/components/ui/progress"
 
 export default function ResultPage() {
+    const [editBadge, setEditBadge] = useState("false")
     const rawStopData = useSearchParams();
     const stopData = rawStopData.get('data');
     const parsed_results = transformData(JSON.parse(stopData).results)
     console.log(parsed_results)
     const stop = rawStopData.get("stop");
     const parsed_stop = JSON.parse(stop);
-
-    const active_routes = 'NA';
+    const active_routes = parsed_results.length;
 
     function transformData(dataArray) {
         let result = [];
@@ -78,56 +79,78 @@ export default function ResultPage() {
         } else if (words) {
             if (words.includes("Llegando")) {
                 return "Llegando";
-            } else if (inputString.startsWith("No")) {
-                return "Fuera";
+            } else if (inputString.startsWith("No") || inputString.startsWith("Servicio")) {
+                return <Image src="/micro_fuera.png" height={32} width={32} />;
             }
         }
     }
 
-    return <div className="min-h-screen flex flex-col justify-center items-center">
-        <Card>
-            <CardHeader>
-                <CardTitle>{parsed_stop.toUpperCase()}</CardTitle>
-                {/* TODO map over buses to assign each a badge */}
-            </CardHeader>
-            <div className="w-[75%] border-t-[2px] border-white/5 rounded-full"></div>
-            <CardContent>
-                <p>{`${active_routes} recorridos activos de ${parsed_results.length}: `}</p>
-                <Badge className={`rounded-full`}>Bus</Badge>
-            </CardContent>
-        </Card>
-        <div className="">
-                {parsed_results.map((route, index) => {
-                    const buses = route.incoming;
-                    return <div>
-                        <p key={index}>{route.route_id}</p>
-                        <Card className="p-0">
-                        <Table>
-                            <TableBody>
-                                {buses.map((bus, index) => {
-                                    return <TableRow className="border-b dark:border-white/10">
-                                        <TableCell className="font-medium">{bus.bus_plate_number}</TableCell>
-                                        <TableCell className="flex gap-2 items-center">
-                                            {bus.bus_distance >= 3000 ? (
-                                                <p>{bus.bus_distance}</p>
-                                            ) : ( bus.bus_distance === null ? (
-                                                'eliminar'
-                                            ) : (
-                                                <div className="flex gap-2 items-center">
-                                                    <Progress value={progressToStop(bus.bus_distance, 3000)} className="h-[3px] min-w-[25px]" />
-                                                    <p>{bus.bus_distance}</p>
-                                                </div>
-                                            )
-                                            )}
-                                        </TableCell>
-                                        <TableCell>{checkInputString(bus.arrival_estimation)}</TableCell>
-                                    </TableRow>
-                                })}
-                            </TableBody>
-                        </Table>
-                        </Card>
-                    </ div> 
-                })}
+    return <div className="min-h-screen flex flex-col gap-12 justify-center items-center">
+        <div className="flex flex-col gap-8">
+            <Card className="flex flex-col gap-8">
+                <CardHeader className="p-0">
+                    <CardTitle className="text-4xl font-semibold tracking-wide">{parsed_stop.toUpperCase()}</CardTitle>
+                    {/* TODO map over buses to assign each a badge */}
+                </CardHeader>
+                <div className="w-[75%] border-t-[2px] border-black/10 dark:border-white/10 rounded-full"></div>
+                <CardContent className="flex flex-col p-0 gap-4">
+                    <p className="text-neutral-500 font-light text-sm">{`${active_routes} recorridos: `}</p>
+                    <div className="flex gap-2 flex-wrap">
+                        {parsed_results.map((item, index) => {
+                            {console.log(`id: ${item.route_id}`)}
+                            return <BadgeCustom content={item.route_id} edit={editBadge} className={`rounded-full w-fit`} />
+                        })}
+                    </div>
+                </CardContent>
+            </Card>
+            <div className="flex flex-col gap-8">
+                    {parsed_results.map((route, index) => {
+                        const buses = route.incoming;
+                        return <div className="flex flex-col gap-2">
+                            <div className="flex gap-1 items-center">
+                                <Image src="/micro_black.png" alt="bus icon" width={32} height={32} className="dark:invert" />
+                                <p className="text-2xl font-semibold" key={index}>{route.route_id}</p>
+                            </div>
+                            <Card className="p-0 overflow-hidden">
+                                <Table >
+                                    <TableBody className="">
+                                        {buses.map((bus, index) => {
+                                            return <TableRow className="border-b dark:border-white/10 text-sm">
+                                                <TableCell className="font-medium">
+                                                    {bus.bus_distance === null ? (
+                                                        <Image src="/micro_fuera.png" alt="icono bus" height={32} width={32} />
+                                                        // <p className="">-</p>
+                                                    ) : (
+                                                        <div className="flex gap-2 items-center justify-start">
+                                                            <p>{bus.bus_plate_number}</p>
+                                                        </div>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell className="flex gap-2 h-[45px] justify-center items-center">
+                                                        {bus.bus_distance >= 3000 ? (
+                                                                <p>{`${bus.bus_distance} mts.`}</p>
+                                                        ) : ( bus.bus_distance === null ? (
+                                                            // <Image src="/micro_fuera.png" alt="icono bus" height={32} width={32} />
+                                                            <p className="">-</p>
+                                                        ) : (
+                                                            <div className="flex gap-2 items-center">
+                                                                <Progress value={progressToStop(bus.bus_distance, 3000)} className="h-[3px] min-w-[40px]" />
+                                                                <p className=" text-nowrap">{bus.bus_distance} mts.</p>
+                                                            </div>
+                                                        )
+                                                        )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex justify-end">{checkInputString(bus.arrival_estimation)}</div>
+                                                </TableCell>
+                                            </TableRow>
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </Card>
+                        </ div>
+                    })}
+            </div>
         </div>
     </div>
 }
