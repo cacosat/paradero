@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react";
+import { Suspense } from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -89,19 +90,21 @@ export default function ResultPage() {
             <Card className="flex flex-col gap-8">
                 <CardHeader className="p-0">
                     <CardTitle className="text-4xl font-semibold tracking-wide">{parsed_stop.toUpperCase()}</CardTitle>
-                    {/* TODO map over buses to assign each a badge */}
                 </CardHeader>
                 <div className="w-[75%] border-t-[2px] border-black/10 dark:border-white/10 rounded-full"></div>
                 <CardContent className="flex flex-col p-0 gap-4">
                     <p className="text-neutral-500 font-light text-sm">{`${active_routes} recorridos: `}</p>
-                    <div className="flex gap-2 flex-wrap">
-                        {parsed_results.map((item, index) => {
-                            return <BadgeCustom key={index} content={item.route_id} edit={editBadge} className={`rounded-full w-fit`} />
-                        })}
-                    </div>
+                    <Suspense>
+                        <div className="flex gap-2 flex-wrap">
+                            {parsed_results.map((item, index) => {
+                                return <BadgeCustom key={index} content={item.route_id} edit={editBadge} className={`rounded-full w-fit`} />
+                            })}
+                        </div>
+                    </Suspense>
                 </CardContent>
             </Card>
             <div className="flex flex-col gap-8">
+                <Suspense>
                     {parsed_results.map((route, index) => {
                         const buses = route.incoming;
                         return (
@@ -150,6 +153,7 @@ export default function ResultPage() {
                         </ div>
                         )
                     })}
+                </Suspense>
             </div>
         </div>
     </div>
