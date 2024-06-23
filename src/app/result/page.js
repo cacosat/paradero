@@ -110,11 +110,14 @@ export default function ResultPage() {
                                         <TableCell className="flex gap-2 items-center">
                                             {bus.bus_distance >= 3000 ? (
                                                 <p>{bus.bus_distance}</p>
+                                            ) : ( bus.bus_distance === null ? (
+                                                'eliminar'
                                             ) : (
                                                 <div className="flex gap-2 items-center">
                                                     <Progress value={progressToStop(bus.bus_distance, 3000)} className="h-[3px] min-w-[25px]" />
                                                     <p>{bus.bus_distance}</p>
                                                 </div>
+                                            )
                                             )}
                                         </TableCell>
                                         <TableCell>{checkInputString(bus.arrival_estimation)}</TableCell>
