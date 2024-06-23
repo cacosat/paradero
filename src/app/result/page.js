@@ -26,7 +26,6 @@ export default function ResultPage() {
     const rawStopData = useSearchParams();
     const stopData = rawStopData.get('data');
     const parsed_results = transformData(JSON.parse(stopData).results)
-    console.log(parsed_results)
     const stop = rawStopData.get("stop");
     const parsed_stop = JSON.parse(stop);
     const active_routes = parsed_results.length;
@@ -80,7 +79,7 @@ export default function ResultPage() {
             if (words.includes("Llegando")) {
                 return "Llegando";
             } else if (inputString.startsWith("No") || inputString.startsWith("Servicio")) {
-                return <Image src="/micro_fuera.png" height={32} width={32} />;
+                return <Image src="/micro_fuera.png" alt="icono micro" height={32} width={32} />;
             }
         }
     }
@@ -97,8 +96,7 @@ export default function ResultPage() {
                     <p className="text-neutral-500 font-light text-sm">{`${active_routes} recorridos: `}</p>
                     <div className="flex gap-2 flex-wrap">
                         {parsed_results.map((item, index) => {
-                            {console.log(`id: ${item.route_id}`)}
-                            return <BadgeCustom content={item.route_id} edit={editBadge} className={`rounded-full w-fit`} />
+                            return <BadgeCustom key={index} content={item.route_id} edit={editBadge} className={`rounded-full w-fit`} />
                         })}
                     </div>
                 </CardContent>
@@ -106,7 +104,8 @@ export default function ResultPage() {
             <div className="flex flex-col gap-8">
                     {parsed_results.map((route, index) => {
                         const buses = route.incoming;
-                        return <div className="flex flex-col gap-2">
+                        return (
+                        <div key={route.route_id} className="flex flex-col gap-2">
                             <div className="flex gap-1 items-center">
                                 <Image src="/micro_black.png" alt="bus icon" width={32} height={32} className="dark:invert" />
                                 <p className="text-2xl font-semibold" key={index}>{route.route_id}</p>
@@ -115,7 +114,7 @@ export default function ResultPage() {
                                 <Table >
                                     <TableBody className="">
                                         {buses.map((bus, index) => {
-                                            return <TableRow className="border-b dark:border-white/10 text-sm">
+                                            return <TableRow key={bus.bus_plate_number} className="border-b dark:border-white/10 text-sm">
                                                 <TableCell className="font-medium">
                                                     {bus.bus_distance === null ? (
                                                         <Image src="/micro_fuera.png" alt="icono bus" height={32} width={32} />
@@ -149,6 +148,7 @@ export default function ResultPage() {
                                 </Table>
                             </Card>
                         </ div>
+                        )
                     })}
             </div>
         </div>
