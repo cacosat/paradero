@@ -80,7 +80,9 @@ export default function ResultPage() {
             if (words.includes("Llegando")) {
                 return "Llegando";
             } else if (inputString.startsWith("No") || inputString.startsWith("Servicio")) {
-                return <Image src="/micro_fuera.png" alt="icono micro" height={32} width={32} />;
+                return <Suspense>
+                    <Image src="/micro_fuera.png" alt="icono micro" height={32} width={32} />
+                </Suspense>
             }
         }
     }
@@ -101,7 +103,9 @@ export default function ResultPage() {
                             <p className="text-neutral-500 font-light text-sm">{`${active_routes} recorridos: `}</p>
                             <div className="flex gap-2 flex-wrap">
                                 {parsed_results.map((item, index) => {
-                                    return <BadgeCustom key={index} content={item.route_id} edit={editBadge} className={`rounded-full w-fit`} />
+                                    return <Suspense>
+                                        <BadgeCustom key={index} content={item.route_id} edit={editBadge} className={`rounded-full w-fit`} />
+                                    </Suspense>
                                 })}
                             </div>
                         </Suspense>
@@ -112,49 +116,53 @@ export default function ResultPage() {
                         {parsed_results.map((route, index) => {
                             const buses = route.incoming;
                             return (
-                            <div key={route.route_id} className="flex flex-col gap-2">
-                                <div className="flex gap-1 items-center">
-                                    <Image src="/micro_black.png" alt="bus icon" width={32} height={32} className="dark:invert" />
-                                    <p className="text-2xl font-semibold" key={index}>{route.route_id}</p>
-                                </div>
-                                <Card className="p-0 overflow-hidden">
-                                    <Table >
-                                        <TableBody className="">
-                                            {buses.map((bus, index) => {
-                                                return <TableRow key={bus.bus_plate_number} className="border-b dark:border-white/10 text-sm">
-                                                    <TableCell className="font-medium">
-                                                        {bus.bus_distance === null ? (
-                                                            <Image src="/micro_fuera.png" alt="icono bus" height={32} width={32} />
-                                                            // <p className="">-</p>
-                                                        ) : (
-                                                            <div className="flex gap-2 items-center justify-start">
-                                                                <p>{bus.bus_plate_number}</p>
-                                                            </div>
-                                                        )}
-                                                    </TableCell>
-                                                    <TableCell className="flex gap-2 h-[45px] justify-center items-center">
-                                                            {bus.bus_distance >= 3000 ? (
-                                                                    <p>{`${bus.bus_distance} mts.`}</p>
-                                                            ) : ( bus.bus_distance === null ? (
-                                                                // <Image src="/micro_fuera.png" alt="icono bus" height={32} width={32} />
-                                                                <p className="">-</p>
-                                                            ) : (
-                                                                <div className="flex gap-2 items-center">
-                                                                    <Progress value={progressToStop(bus.bus_distance, 3000)} className="h-[3px] min-w-[40px]" />
-                                                                    <p className=" text-nowrap">{bus.bus_distance} mts.</p>
-                                                                </div>
-                                                            )
-                                                            )}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <div className="flex justify-end">{checkInputString(bus.arrival_estimation)}</div>
-                                                    </TableCell>
-                                                </TableRow>
-                                            })}
-                                        </TableBody>
-                                    </Table>
-                                </Card>
-                            </ div>
+                            <Suspense>
+                                <div key={route.route_id} className="flex flex-col gap-2">
+                                    <div className="flex gap-1 items-center">
+                                        <Image src="/micro_black.png" alt="bus icon" width={32} height={32} className="dark:invert" />
+                                        <p className="text-2xl font-semibold" key={index}>{route.route_id}</p>
+                                    </div>
+                                    <Card className="p-0 overflow-hidden">
+                                        <Table >
+                                            <TableBody className="">
+                                                {buses.map((bus, index) => {
+                                                    return <Suspense>
+                                                        <TableRow key={bus.bus_plate_number} className="border-b dark:border-white/10 text-sm">
+                                                            <TableCell className="font-medium">
+                                                                {bus.bus_distance === null ? (
+                                                                    <Image src="/micro_fuera.png" alt="icono bus" height={32} width={32} />
+                                                                    // <p className="">-</p>
+                                                                ) : (
+                                                                    <div className="flex gap-2 items-center justify-start">
+                                                                        <p>{bus.bus_plate_number}</p>
+                                                                    </div>
+                                                                )}
+                                                            </TableCell>
+                                                            <TableCell className="flex gap-2 h-[45px] justify-center items-center">
+                                                                    {bus.bus_distance >= 3000 ? (
+                                                                            <p>{`${bus.bus_distance} mts.`}</p>
+                                                                    ) : ( bus.bus_distance === null ? (
+                                                                        // <Image src="/micro_fuera.png" alt="icono bus" height={32} width={32} />
+                                                                        <p className="">-</p>
+                                                                    ) : (
+                                                                        <div className="flex gap-2 items-center">
+                                                                            <Progress value={progressToStop(bus.bus_distance, 3000)} className="h-[3px] min-w-[40px]" />
+                                                                            <p className=" text-nowrap">{bus.bus_distance} mts.</p>
+                                                                        </div>
+                                                                    )
+                                                                    )}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                <div className="flex justify-end">{checkInputString(bus.arrival_estimation)}</div>
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    </Suspense>
+                                                })}
+                                            </TableBody>
+                                        </Table>
+                                    </Card>
+                                </ div>
+                            </Suspense>
                             )
                         })}
                     </Suspense>
