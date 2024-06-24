@@ -11,7 +11,7 @@ import {
 export default function InputOtpCustom(props) {
 
     return <>
-            <InputOTP maxLength={6} pattern={props.pattern} value={props.value} onChange={props.onChange}>
+            <InputOTP inputMode="text" maxLength={6} pattern={props.pattern} value={props.value} onChange={props.onChange}>
                 <InputOTPGroup>
                     <InputOTPSlot index={0}  />
                     <InputOTPSlot index={1}  />

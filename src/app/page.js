@@ -67,11 +67,11 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col h-screen min-w-[300px] max-w-[1440px] mx-auto pt-10">
+    <main className="flex flex-col h-screen min-w-[300px] max-w-[1440px] mx-auto pt-2">
         <div className="self-end justify-self-start mx-2 sm:mx-8">
           <ModeToggle />
         </div>
-      <div className="flex justify-center items-center h-full mx-2">
+      <div className="flex justify-center items-center my-auto mx-2">
         <Card>
           <Tabs defaultValue="stop" className="flex flex-col max-w-[400px]">
             <div className="self-center">
