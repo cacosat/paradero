@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import {
     Card,
     CardContent,
@@ -20,6 +21,7 @@ import {
     TableRow,
   } from "@/components/ui/table"  
 import BadgeCustom from "@/components/ui/badge-custom";  
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress"
 import { ModeToggle } from "@/components/ui/modeToggle";
 
@@ -87,9 +89,12 @@ function Result() {
     }
 
     return (
-    <div className="min-h-screen flex flex-col gap-12 justify-center items-center">
-        <div className="flex flex-col gap-8 mt-2">
-            <div class="self-end">
+    <div className="min-h-screen  flex flex-col gap-12 justify-center items-center">
+        <div className="flex flex-col min-w-[300px] gap-8 mt-2 mx-2">
+            <div className="flex justify-between items-center">
+                <Link href="/">
+                    <Image className="dark:invert hover:bg-black/10 rounded-md transition-all" src="/back.png" alt="back icon" width={24} height={24} />
+                </Link>
                 <ModeToggle />
             </div>
             <Card className="flex flex-col gap-8">

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/input-otp"
 import InputOtpCustom from "@/components/ui/input-otp-custom";
 import { Input } from "@/components/ui/input"
+import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/modeToggle";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -28,6 +29,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 export default function Home() {
   const validationRegex = /^[0-9a-zA-Z]+$/;
+  const [buttonLoading, setButtonLoading] = useState(false);
   const [otp, setOtp] = useState('');
   const { toast } = useToast();
   const router = useRouter();
@@ -35,9 +37,13 @@ export default function Home() {
   const handleOtpChange = (newOtp) => {
     if (newOtp.length <= 6 || newOtp.length < otp.length) {  // Allow changes that reduce the length
       setOtp(newOtp);  // Set the new OTP directly
-      console.log(newOtp);
+      // console.log(newOtp);
     }
   };
+
+  useEffect(() => {
+    console.log(buttonLoading);
+  }, [buttonLoading]);
 
   const handleSubmit = async (event, redirect) => {
     const value = otp; // dependent on state hook otp
@@ -49,13 +55,29 @@ export default function Home() {
           description: "Ingresa un valor del tipo 'pc1000, pa251, pa10, etc.'"
         });
       } else {
-        console.log("correct")
-        const response = await fetch(`https://red-api.chewy.workers.dev/stops/${value}/next_arrivals`);
-        if (response.ok) {
-          const response_data = await response.json();
-          const serialized_response = encodeURIComponent(JSON.stringify(response_data))
-          const serialized_stop = encodeURIComponent(JSON.stringify(otp));
-          router.push(`/result?stop=${serialized_stop}&data=${serialized_response}`)
+        // console.log("correct")}
+        setButtonLoading(true);
+        try {
+          const response = await fetch(`https://red-api.chewy.workers.dev/stops/${otp}/next_arrivals`);
+          if (response.ok) {
+            const response_data = await response.json();
+            const serialized_response = encodeURIComponent(JSON.stringify(response_data));
+            const serialized_stop = encodeURIComponent(JSON.stringify(otp));
+            router.push(`/result?stop=${serialized_stop}&data=${serialized_response}`);
+          } else {
+            toast({
+              title: "Error al buscar información (HTTP)",
+              description: "Hubo un error, intenta de nuevo más tarde."
+            });
+          }
+        } catch (error) {
+          // Handle fetch errors here
+          toast({
+            title: "Error al buscar información (Network)",
+            description: "Please check your internet connection."
+          });
+        } finally {
+          setButtonLoading(false); // Set loading to false when the fetch is complete
         }
       }
     } else {
@@ -125,8 +147,12 @@ export default function Home() {
               </CardContent>
               <CardFooter className="flex justify-end">
                 <Button onClick={handleSubmit} className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">
-                  <p>Buscar</p>
-                </Button>
+                {buttonLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <p>Buscar</p>
+                  )}
+                  </Button>
               </CardFooter>
             </TabsContent>
           </Tabs>
