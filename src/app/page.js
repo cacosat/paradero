@@ -28,7 +28,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/components/ui/use-toast";
 
 export default function Home() {
-  const validationRegex = /^[0-9a-zA-Z]+$/;
+  const regexOtpPatternOTP = /^[0-9a-zA-Z]+$/;
+  const regexInputValidation = /^[a-zA-Z]{2}[0-9]+$/;
+  const isInputValid = (input) => regexInputValidation.test(input)
   const [buttonLoading, setButtonLoading] = useState(false);
   const [otp, setOtp] = useState('');
   const { toast } = useToast();
@@ -48,7 +50,7 @@ export default function Home() {
   const handleSubmit = async (event, redirect) => {
     const value = otp; // dependent on state hook otp
     if (value.length >= 3) {
-      if (!/^[a-zA-Z]{2}[0-9]+$/.test(value)) {
+      if (!regexInputValidation.test(value)) {
         // input validation
         toast({
           title: "Debe tener 2 letras y el resto números",
@@ -94,7 +96,7 @@ export default function Home() {
           <ModeToggle />
         </div>
       <div className="flex justify-center items-center my-auto mx-2">
-        <Card>
+        <Card className="">
           <Tabs defaultValue="stop" className="flex flex-col max-w-[400px]">
             <div className="self-center">
               <TabsList className="">
@@ -106,53 +108,78 @@ export default function Home() {
             <TabsContent value="stop" className="flex flex-col">
         
               <CardHeader>
-                <CardTitle>Paradero</CardTitle>
-                <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
+                <CardTitle>Código de Paradero</CardTitle>
+                <CardDescription className="">2 letras y al menos un número (ej: pc1, Pa10, etc.)</CardDescription>
               </CardHeader>
               <CardContent className="self-center">
 
-                <InputOtpCustom pattern={validationRegex} maxLength={6} value={otp} onChange={handleOtpChange} />
+                <InputOtpCustom pattern={regexOtpPatternOTP} maxLength={6} value={otp} onChange={handleOtpChange} />
 
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button onClick={handleSubmit} className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">Buscar</Button>
+                <Button 
+                  disabled={!isInputValid(otp) || buttonLoading} 
+                  onClick={handleSubmit} 
+                  className="flex hover:bg-neutral-950 active:bg-neutral-950 transition-all"
+                >
+                  {buttonLoading ? (
+                    <Loader2 className="m-2 h-4 w-4 animate-spin" /> 
+                  ) : (
+                    <p>Buscar</p>
+                  )}
+                </Button>
               </CardFooter>
             </TabsContent>
             <TabsContent value="bus" className="flex flex-col">
               <CardHeader>
-                <CardTitle>Bus</CardTitle>
+                <CardTitle className="flex justify-between">
+                  <p>Bus</p> 
+                  <p className="text-red-800 font-light text-xs">(Inhabilitado)</p>
+                </CardTitle>
                 <CardDescription>Ingresa el recorrido / bus</CardDescription>
               </CardHeader>
               <CardContent className="self-center">
                 <Input />
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">Buscar</Button>
+                <Button disabled className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">
+                  {buttonLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <p>Inhabilitado</p>
+                  )}
+                </Button>
               </CardFooter>
             </TabsContent>
             <TabsContent value="both" className="flex flex-col">
               <CardHeader>
-                <CardTitle>Paradero</CardTitle>
-                <CardDescription>Ingresa el número de paradero (ej.: PA100)</CardDescription>
+                <CardTitle className="flex justify-between">
+                  <p>Código de Paradero</p>
+                  <p className="text-red-800 font-light text-xs">(Inhabilitado)</p>  
+                </CardTitle>
+                <CardDescription className="">2 letras y al menos un número (ej: pc1, Pa10, etc.)</CardDescription>
               </CardHeader>
               <CardContent className="self-center">
-                <InputOtpCustom pattern={validationRegex} value={otp} onChange={handleOtpChange} />
+                <InputOtpCustom pattern={regexOtpPatternOTP} value={otp} onChange={handleOtpChange} />
               </CardContent>
               <CardHeader>
-                <CardTitle>Bus</CardTitle>
+                <CardTitle className="flex justify-between">
+                  <p>Bus</p> 
+                  <p className="text-red-800 font-light text-xs">(Inhabilitado)</p>
+                </CardTitle>
                 <CardDescription>Ingresa el recorrido / bus</CardDescription>
               </CardHeader>
               <CardContent className="self-center">
                 <Input />
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button onClick={handleSubmit} className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">
-                {buttonLoading ? (
+                <Button disabled onClick={handleSubmit} className="hover:bg-neutral-950 active:bg-neutral-950 transition-all">
+                  {buttonLoading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
-                    <p>Buscar</p>
+                    <p>Inhabilitado</p>
                   )}
-                  </Button>
+                </Button>
               </CardFooter>
             </TabsContent>
           </Tabs>
