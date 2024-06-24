@@ -21,6 +21,7 @@ import {
   } from "@/components/ui/table"  
 import BadgeCustom from "@/components/ui/badge-custom";  
 import { Progress } from "@/components/ui/progress"
+import { ModeToggle } from "@/components/ui/modeToggle";
 
 function Result() {
     const [editBadge, setEditBadge] = useState("false")
@@ -87,7 +88,10 @@ function Result() {
 
     return (
     <div className="min-h-screen flex flex-col gap-12 justify-center items-center">
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 mt-2">
+            <div class="self-end">
+                <ModeToggle />
+            </div>
             <Card className="flex flex-col gap-8">
                 <CardHeader className="p-0">
                     <Suspense>
